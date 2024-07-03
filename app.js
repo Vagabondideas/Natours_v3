@@ -31,12 +31,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());
 // app.use(helmet({ contentSecurityPolicy: false }));
 
-// app.use(
-//   cors({
-//     origin: `http://127.0.0.1:8000/api/v1/bookings/checkout-session/`,
-//   }),
-// );
-
 //Development Logging (Morgan middleware) - HTTP Request Logger
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

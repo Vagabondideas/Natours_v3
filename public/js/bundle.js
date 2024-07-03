@@ -24187,16 +24187,16 @@
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.resourceNamespace = void 0;
-      function ResourceNamespace(stripe3, resources) {
+      function ResourceNamespace(stripe2, resources) {
         for (const name in resources) {
           const camelCaseName = name[0].toLowerCase() + name.substring(1);
-          const resource = new resources[name](stripe3);
+          const resource = new resources[name](stripe2);
           this[camelCaseName] = resource;
         }
       }
       function resourceNamespace(namespace, resources) {
-        return function(stripe3) {
-          return new ResourceNamespace(stripe3, resources);
+        return function(stripe2) {
+          return new ResourceNamespace(stripe2, resources);
         };
       }
       exports.resourceNamespace = resourceNamespace;
@@ -26791,14 +26791,14 @@
       StripeResource.extend = utils_js_1.protoExtend;
       StripeResource.method = StripeMethod_js_1.stripeMethod;
       StripeResource.MAX_BUFFERED_REQUEST_METRICS = 100;
-      function StripeResource(stripe3, deprecatedUrlData) {
-        this._stripe = stripe3;
+      function StripeResource(stripe2, deprecatedUrlData) {
+        this._stripe = stripe2;
         if (deprecatedUrlData) {
           throw new Error("Support for curried url params was dropped in stripe-node v7.0.0. Instead, pass two ids.");
         }
         this.basePath = (0, utils_js_1.makeURLInterpolator)(
           // @ts-ignore changing type of basePath
-          this.basePath || stripe3.getApiField("basePath")
+          this.basePath || stripe2.getApiField("basePath")
         );
         this.resourcePath = this.path;
         this.path = (0, utils_js_1.makeURLInterpolator)(this.path);
@@ -30642,8 +30642,8 @@
       var HttpClient_js_1 = require_HttpClient();
       var MAX_RETRY_AFTER_WAIT = 60;
       var RequestSender = class _RequestSender {
-        constructor(stripe3, maxBufferedRequestMetric) {
-          this._stripe = stripe3;
+        constructor(stripe2, maxBufferedRequestMetric) {
+          this._stripe = stripe2;
           this._maxBufferedRequestMetric = maxBufferedRequestMetric;
         }
         _addHeadersDirectlyToObject(obj, headers) {
@@ -31131,7 +31131,7 @@
         "appInfo",
         "stripeAccount"
       ];
-      var defaultRequestSenderFactory = (stripe3) => new RequestSender_js_1.RequestSender(stripe3, StripeResource_js_1.StripeResource.MAX_BUFFERED_REQUEST_METRICS);
+      var defaultRequestSenderFactory = (stripe2) => new RequestSender_js_1.RequestSender(stripe2, StripeResource_js_1.StripeResource.MAX_BUFFERED_REQUEST_METRICS);
       function createStripe(platformFunctions, requestSender = defaultRequestSenderFactory) {
         Stripe.PACKAGE_VERSION = "15.12.0";
         Stripe.USER_AGENT = Object.assign({ bindings_version: Stripe.PACKAGE_VERSION, lang: "node", publisher: "stripe", uname: null, typescript: false }, (0, utils_js_1.determineProcessUserAgentProperties)());
@@ -33899,7 +33899,7 @@
     const el = document.querySelector(".alert");
     if (el) el.parentElement.removeChild(el);
   };
-  var showAlert = (type, msg) => {
+  var showAlert2 = (type, msg) => {
     hideAlert();
     const markup = `<div class="alert alert--${type}">${msg}</div>`;
     document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
@@ -33911,32 +33911,32 @@
     try {
       const res = await axios_default({
         method: "POST",
-        url: "http://127.0.0.1:8000/api/v1/users/login",
+        url: "/api/v1/users/login",
         data: {
           email,
           password
         }
       });
       if (res.data.status === "success") {
-        showAlert("success", "Login Successful");
+        showAlert2("success", "Login Successful");
         window.setTimeout(() => {
           location.assign("/");
         }, 1500);
       }
     } catch (err) {
-      showAlert("error", err.response.data.message);
+      showAlert2("error", err.response.data.message);
     }
   };
   var logout = async () => {
     try {
       const res = await axios_default({
         method: "GET",
-        url: "http://127.0.0.1:8000/api/v1/users/logout"
+        url: "/api/v1/users/logout"
       });
       if (res.data.status = "success") location.reload(true);
     } catch (err) {
       console.log(err.response);
-      showAlert("error", "Error logging out! Try again.");
+      showAlert2("error", "Error logging out! Try again.");
     }
   };
 
@@ -33950,20 +33950,31 @@
         data
       });
       if (res.data.status === "success") {
-        showAlert("success", `${type.toUpperCase()} updated successfully!`);
+        showAlert2("success", `${type.toUpperCase()} updated successfully!`);
       }
     } catch (err) {
-      showAlert("error", err.response.data.message);
+      showAlert2("error", err.response.data.message);
     }
   };
 
   // public/js/stripe.js
-  var stripe = require_stripe_cjs_worker()(
-    "pk_test_51PROQXIQVsIi8CVD8lxUYKyx9z4Vsa1B25T059hz05JZKlG3txwAivE8ZUxPwM4tTzBczuQttjJkqg9jFIPTsb8c00HdSWRWfH"
-  );
+  var bookTour = async (tourId) => {
+    try {
+      const response = await fetch(`/api/v1/bookings/checkout-session/${tourId}`);
+      const session = await response.json();
+      if (session.url) {
+        window.location.href = session.url;
+      } else {
+        throw new Error("Session URL not found");
+      }
+    } catch (err) {
+      console.log(err);
+      showAlert2("error", err);
+    }
+  };
 
   // public/js/index.js
-  var stripe2 = require_stripe_cjs_worker()(
+  var stripe = require_stripe_cjs_worker()(
     "pk_test_51PROQXIQVsIi8CVD8lxUYKyx9z4Vsa1B25T059hz05JZKlG3txwAivE8ZUxPwM4tTzBczuQttjJkqg9jFIPTsb8c00HdSWRWfH"
   );
   var mapBox = document.getElementById("map");
@@ -34012,26 +34023,10 @@
     });
   if (bookBtn)
     bookBtn.addEventListener("click", (e) => {
-      console.log("btn clicked");
       e.target.textContent = "Processing...";
       const { tourId } = e.target.dataset;
-      console.log("tourID " + tourId);
-      try {
-        fetch(
-          `http://127.0.0.1:8000/api/v1/bookings/create-checkout-session/${tourId}`,
-          {
-            method: "POST"
-          }
-        ).then((res) => {
-          if (res.ok) return res.json();
-          return res.json().then((json) => Promise.reject(json));
-        }).then(
-          stripe2.redirectToCheckout({
-            sessionId: session.data.session.id
-          })
-        );
-      } catch (err) {
-        console.log(err);
-      }
+      bookTour(tourId);
     });
+  var alertMessage = document.querySelector("body").dataset.alert;
+  if (alertMessage) showAlert("success", alertMessage, 20);
 })();

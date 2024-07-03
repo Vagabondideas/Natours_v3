@@ -67,40 +67,10 @@ if (userPasswordForm)
 
 if (bookBtn)
   bookBtn.addEventListener('click', (e) => {
-    console.log('btn clicked');
-
     e.target.textContent = 'Processing...';
     const { tourId } = e.target.dataset;
-    console.log('tourID ' + tourId);
-
-    try {
-      // 1) Get checkout session from API
-      fetch(
-        `http://127.0.0.1:8000/api/v1/bookings/create-checkout-session/${tourId}`,
-        {
-          method: 'POST',
-        },
-      )
-        .then((res) => {
-          if (res.ok) return res.json();
-          return res.json().then((json) => Promise.reject(json));
-        })
-
-        // .then(({ url }) => {
-        //   // console.log(url);
-        //   window.location = url;
-        // });
-
-        // 2) Create checkout form + chanre credit card
-        // await stripe.redirectToCheckhout(session.url);
-
-        .then(
-          stripe.redirectToCheckout({
-            sessionId: session.data.session.id,
-          }),
-        );
-    } catch (err) {
-      console.log(err);
-      // showAlert('error', err);
-    }
+    bookTour(tourId);
   });
+
+const alertMessage = document.querySelector('body').dataset.alert;
+if (alertMessage) showAlert('success', alertMessage, 20);
