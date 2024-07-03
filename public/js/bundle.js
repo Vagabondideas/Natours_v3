@@ -33959,11 +33959,14 @@
 
   // public/js/stripe.js
   var bookTour = async (tourId) => {
+    console.log("bookTour called");
     try {
       const response = await fetch(`/api/v1/bookings/checkout-session/${tourId}`);
       const session = await response.json();
+      console.log("Session URL at frontend from bookTour " + session.url);
       if (session.url) {
         window.location.href = session.url;
+        console.log("Session URL at frontend from bookTour " + session.url);
       } else {
         throw new Error("Session URL not found");
       }
@@ -34025,6 +34028,7 @@
     bookBtn.addEventListener("click", (e) => {
       e.target.textContent = "Processing...";
       const { tourId } = e.target.dataset;
+      console.log("btn clicked and tour id is " + tourId);
       bookTour(tourId);
     });
   var alertMessage = document.querySelector("body").dataset.alert;

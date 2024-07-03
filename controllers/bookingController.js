@@ -36,10 +36,10 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
           quantity: 1,
         },
       ],
-      // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
-      //   req.params.tourId
-      // }&user=${req.user.id}&price=${tour.price}`,
-      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
+      success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+        req.params.tourId
+      }&user=${req.user.id}&price=${tour.price}`,
+      // success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
@@ -47,12 +47,13 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
 
     // 3) Create session as response
     res.json({ url: session.url });
-    console.log(session.url);
+    // console.log('Session url from booking controller ' + session.url);
 
     // res.status(200).json({
     //   status: 'success',
     //   session,
     // });
+    // console.log('Full session from booking controller ' + session);
   } catch (e) {
     res.status(500).json({ error: e.message });
     console.log('could not run stripe checkout');
