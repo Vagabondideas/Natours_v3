@@ -36,9 +36,10 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
           quantity: 1,
         },
       ],
-      success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
-        req.params.tourId
-      }&user=${req.user.id}&price=${tour.price}`,
+      // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+      //   req.params.tourId
+      // }&user=${req.user.id}&price=${tour.price}`,
+      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
