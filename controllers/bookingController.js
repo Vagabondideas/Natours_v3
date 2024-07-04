@@ -90,6 +90,7 @@ const createBookingCheckout = async (session) => {
 exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
   const signature = req.headers['stripe-signature'];
+  console.log('signature = ' + signature);
 
   let event;
   try {
@@ -98,6 +99,7 @@ exports.webhookCheckout = (req, res, next) => {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
+    console.log('event constructed = ' + event);
   } catch (err) {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
