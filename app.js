@@ -65,11 +65,15 @@ app.use('/api', limiter);
 // ********************************************************************************************
 // Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
 // NOTE: This route goes straight to the bookingController
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout,
-);
+// app.post(
+//   '/webhook-checkout',
+//   express.raw({ type: 'application/json' }),
+//   bookingController.webhookCheckout,
+// );
+
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), (req, res, next) => {
+  console.log('Webhook route middleware reached');
+  console.log('Raw body (buffer):', req.body);
 // *****************************************************************************************************
 
 //BODY PARSER middleware - Reading data from body into req.body
