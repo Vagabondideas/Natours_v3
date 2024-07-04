@@ -8,7 +8,7 @@
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
     "watch": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js --watch",
-    "build": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js"
+    "build": "esbuild ./public/js/index.js --bundle --minify --outfile=./public/js/bundle.js --platform=browser"
   },
   "author": "Vagabondsideas",
   "license": "ISC",

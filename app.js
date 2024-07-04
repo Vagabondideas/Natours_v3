@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const cors = require('cors');
 
 const AppError = require('./utilities/appError');
@@ -24,6 +25,19 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // GLOBAL MIDDLEWARE
+// ********************************************************
+// CORS - Lesson 222
+app.use(cors());
+// Access-Control-Allow-Origin *
+// api.natours.com, front-end natours.com
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }))
+
+app.options('*', cors());
+// app.options('/api/v1/tours/:id', cors());
+// ***************************************************************
+
 //Serving Static Files middleware - (eg.html, img, etc...)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,7 +69,7 @@ app.use(mongoSanitize());
 //Data Sanitization against XSS
 app.use(xss());
 
-//Prevent parameter pollution
+//WHITELIST - Prevent parameter pollution
 app.use(
   hpp({
     whitelist: [
@@ -68,6 +82,9 @@ app.use(
     ],
   }),
 );
+
+// Compression - Lesson 222
+app.use(compression());
 
 //Test middleware
 app.use((req, res, next) => {
