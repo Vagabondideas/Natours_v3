@@ -43,7 +43,7 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
       // }&user=${req.user.id}&price=${tour.price}`,
 
       // SUCCESS URL - AFTER HOOK
-      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
+      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`, //alert in viewsController!!
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
@@ -88,6 +88,7 @@ const createBookingCheckout = async (session) => {
 };
 
 exports.webhookCheckout = (req, res, next) => {
+  console.log('webhookCheckout reached');
   const signature = req.headers['stripe-signature'];
 
   let event;

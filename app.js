@@ -22,6 +22,8 @@ const bookingRouter = require('./routes/bookingRoutes');
 
 const app = express();
 
+app.enable('trust proxy');
+
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -62,6 +64,7 @@ app.use('/api', limiter);
 // STRIPE WEBHOOK - ADDED LESSON 227 (Sec. 14 last lesson)
 // ********************************************************************************************
 // Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+// NOTE: This route goes straight to the bookingController
 app.post(
   '/webhook-checkout',
   express.raw({ type: 'application/json' }),
