@@ -1,6 +1,8 @@
-const stripe = require('stripe')(
-  'sk_test_51PROQXIQVsIi8CVDCWrFdfG9faNJj4fC7Nipu9dM3bz7b4i8PxBY0kRmz8NQ5bbvmHWAYCMm84zuPH4rIGiMTnd5006tIyIJ38',
-);
+// const stripe = require('stripe')(
+//   'sk_test_51PROQXIQVsIi8CVDCWrFdfG9faNJj4fC7Nipu9dM3bz7b4i8PxBY0kRmz8NQ5bbvmHWAYCMm84zuPH4rIGiMTnd5006tIyIJ38',
+// );
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel'); //added for stripe hook lesson 227
 const Booking = require('../models/bookingModel');
