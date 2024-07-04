@@ -71,9 +71,14 @@ app.use('/api', limiter);
 //   bookingController.webhookCheckout,
 // );
 
-app.post('/webhook-checkout', express.raw({ type: 'application/json' }), (req, res, next) => {
-  console.log('Webhook route middleware reached');
-  console.log('Raw body (buffer):', req.body);
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  (req, res, next) => {
+    console.log('Webhook route middleware reached');
+    console.log('Raw body (buffer):', req.body);
+  },
+);
 // *****************************************************************************************************
 
 //BODY PARSER middleware - Reading data from body into req.body
