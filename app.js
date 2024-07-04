@@ -17,6 +17,7 @@ const viewRouter = require('./routes/viewRoutes');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingController = require('./controllers/bookingController'); //added for handler of route webhook-checkout
 const bookingRouter = require('./routes/bookingRoutes');
 
 const app = express();
@@ -57,6 +58,16 @@ const limiter = rateLimit({
   message: 'Too many request from this IP. Try again later in an hour.',
 });
 app.use('/api', limiter);
+
+// STRIPE WEBHOOK - ADDED LESSON 227 (Sec. 14 last lesson)
+// ********************************************************************************************
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
+// *****************************************************************************************************
 
 //BODY PARSER middleware - Reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); //Limit body size file to 10Kb - Lesson 144

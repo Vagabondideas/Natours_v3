@@ -10,10 +10,6 @@ router.get(
   '/checkout-session/:tourId',
   bookingController.createCheckoutSession,
 );
-// router.post(
-//   '/create-checkout-session',
-//   bookingController.createCheckoutSession,
-// );
 
 router.use(authController.restrictTo('admin', 'lead-guide'));
 

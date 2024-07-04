@@ -2,6 +2,7 @@ const stripe = require('stripe')(
   'sk_test_51PROQXIQVsIi8CVDCWrFdfG9faNJj4fC7Nipu9dM3bz7b4i8PxBY0kRmz8NQ5bbvmHWAYCMm84zuPH4rIGiMTnd5006tIyIJ38',
 );
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel'); //added for stripe hook lesson 227
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utilities/catchAsync');
 const factory = require('./factoryController');
@@ -36,10 +37,13 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
           quantity: 1,
         },
       ],
-      success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
-        req.params.tourId
-      }&user=${req.user.id}&price=${tour.price}`,
-      // success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
+      // SUCCESS URL TO CREATE BOOKING - BEFORE HOOK
+      // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+      //   req.params.tourId
+      // }&user=${req.user.id}&price=${tour.price}`,
+
+      // SUCCESS URL - AFTER HOOK
+      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
@@ -60,6 +64,9 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   }
 });
 
+/*
+CREATE BOOKING WORKING - BEFORE HOOK
+***********************************************************************************
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   // This is only TEMPORARY, because it's UNSECURE: everyone can make bookings without paying
   const { tour, user, price } = req.query;
@@ -69,7 +76,38 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 
   res.redirect(req.originalUrl.split('?')[0]);
 });
+**************************************************************************************
+*/
+// CREATE BOOKING - AFTER HOOK
+const createBookingCheckout = async (session) => {
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  // const price = session.display_items[0].amount / 100;
+  const price = session.amount_total / 100;
+  await Booking.create({ tour, user, price });
+};
 
+exports.webhookCheckout = (req, res, next) => {
+  const signature = req.headers['stripe-signature'];
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET,
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed')
+    createBookingCheckout(event.data.object);
+
+  res.status(200).json({ received: true });
+};
+
+// *************************************************************************
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);

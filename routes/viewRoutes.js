@@ -5,8 +5,7 @@ const bookingController = require('./../controllers/bookingController');
 
 const router = express.Router();
 
-// REMOVED this midware because it's repetitive with protected. Insert in individual routes.
-// router.use(authController.isLoggedIn);
+router.use(viewsController.alerts);
 
 router.get('/', authController.isLoggedIn, viewsController.getOverview);
 
@@ -14,12 +13,20 @@ router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
+// GET MY TOUR WITHOUT CREATE BOOKING - AFTER HOOK
+router.get('/my-tours', authController.protect, viewsController.getMyTours);
+
+/*
+GET MY TOUR n CREATE BOOKING - BEFORE HOOK
+**************************************************************
 router.get(
   '/my-tours',
   bookingController.createBookingCheckout,
   authController.protect,
   viewsController.getMyTours,
-);
+  );
+****************************************************************
+*/
 
 router.post(
   '/submit-user-data',

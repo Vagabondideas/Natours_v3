@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "source": "./public/js/index.js",
-  "main": "./app.js",
+  "main": "./server.js",
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
