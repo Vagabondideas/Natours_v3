@@ -45,7 +45,7 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
       // }&user=${req.user.id}&price=${tour.price}`,
 
       // SUCCESS URL - AFTER HOOK
-      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`, //alert in viewsController!!
+      success_url: `${req.protocol}://${req.get('host')}/my-tours`, //alert in viewsController!!
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
@@ -82,6 +82,7 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 */
 // CREATE BOOKING - AFTER HOOK
 const createBookingCheckout = async (session) => {
+  console.log('createBookingCheckout reached');
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
   // const price = session.display_items[0].amount / 100;
@@ -98,7 +99,7 @@ exports.webhookCheckout = (req, res, next) => {
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
-      console.log('req body = ' + req.body),
+      // console.log('req body = ' + req.body),
       signature,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
