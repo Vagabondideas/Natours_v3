@@ -101,7 +101,8 @@ exports.webhookCheckout = (req, res, next) => {
       req.body,
       // console.log('req body = ' + req.body),
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET,
+      we_1PV4HSIQVsIi8CVDMd5xDJjf,
+      // process.env.STRIPE_WEBHOOK_SECRET,
     );
     console.log('event constructed = ' + event);
   } catch (err) {
