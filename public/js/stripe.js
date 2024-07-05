@@ -13,8 +13,8 @@ export const bookTour = async (tourId) => {
   console.log('bookTour called');
   try {
     // 1) Get checkout session from API
-    const response = await fetch(`/api/v1/bookings/checkout-session/${tourId}`); //fetch this route (in bookingRoutes), will call createCheckoutSession handler in bookingController
-    const session = await response.json();
+    const session = await fetch(`/api/v1/bookings/checkout-session/${tourId}`); //fetch this route (in bookingRoutes), will call createCheckoutSession handler in bookingController
+    // const session = await response.json();
     console.log('Session URL at frontend from bookTour ' + session.url);
 
     // 2) Create checkout form + chanrge credit card
