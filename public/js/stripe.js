@@ -15,10 +15,11 @@ export const bookTour = async (tourId) => {
     // 1) Get checkout session from API
     const session = await fetch(`/api/v1/bookings/checkout-session/${tourId}`); //fetch this route (in bookingRoutes), will call createCheckoutSession handler in bookingController
     // const session = await response.json();
-    console.log('Session URL at frontend from bookTour ' + session.url);
+    console.log('Session URL at frontend from bookTour ' + session);
 
     // 2) Create checkout form + chanrge credit card
     stripe.redirectToCheckout({ session });
+    console.log('re-directed with stripe');
     // if (session.url) {
     //   window.location.href = session.url;
     //   console.log('Session URL at frontend from bookTour ' + session.url);

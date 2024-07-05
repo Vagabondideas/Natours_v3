@@ -33965,8 +33965,9 @@ var bookTour = async (tourId) => {
   console.log("bookTour called");
   try {
     const session = await fetch(`/api/v1/bookings/checkout-session/${tourId}`);
-    console.log("Session URL at frontend from bookTour " + session.url);
+    console.log("Session URL at frontend from bookTour " + session);
     stripe.redirectToCheckout({ session });
+    console.log("re-directed with stripe");
   } catch (err) {
     console.log(err);
     showAlert2("error", err);
