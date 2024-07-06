@@ -10,6 +10,8 @@ const cookieParser = require('cookie-parser');
 // const bodyParser = require('body-parser');
 const compression = require('compression');
 const cors = require('cors');
+const endpointSecret =
+  'whsec_54c16f242102acc035d98cb2cdf5b56263e81fd379fb66e683d9fd5fcedd96c3';
 
 const AppError = require('./utilities/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -23,7 +25,7 @@ const bookingRouter = require('./routes/bookingRoutes');
 
 const app = express();
 
-app.set('trust proxy', false);
+app.set('trust proxy', true);
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -64,14 +66,43 @@ app.use('/api', limiter);
 
 // STRIPE WEBHOOK - ADDED LESSON 227 (Sec. 14 last lesson)
 // ********************************************************************************************
-// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
-// NOTE: This route goes straight to the bookingController
-// app.post(
-//   '/webhook-checkout',
-//   express.raw({ type: 'application/json' }),
-//   bookingController.webhookCheckout,
-// );
+// Stripe webhook, BEFORE body-parser, because stripe needs the raw body
+/*
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
+*/
+app.post(
+  '/stripeHook',
+  express.raw({ type: 'application/json' }),
+  (request, response) => {
+    const sig = request.headers['stripe-signature'];
 
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+
+    // Handle the event
+    switch (event.type) {
+      case 'checkout.session.completed':
+        const checkoutSessionCompleted = event.data.object;
+        // Then define and call a function to handle the event payment_intent.succeeded
+        bookingController.createBookingCheckout(checkoutSessionCompleted);
+        break;
+      // ... handle other event types
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+    res.status(200).json({ received: true });
+  },
+);
 // *****************************************************************************************************
 
 //BODY PARSER middleware - Reading data from body into req.body

@@ -80,7 +80,6 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 
 // CREATE BOOKING - AFTER HOOK
 /*
-
 exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
   const signature = req.headers['stripe-signature'];
@@ -113,6 +112,14 @@ const createBookingCheckout = async (session) => {
 
 // *************************************************************************
 */
+
+exports.createBookingCheckout = async (session) => {
+  console.log('createBookingCheckout reached');
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  const price = session.amount_total / 100;
+  await Booking.create({ tour, user, price });
+};
 
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
