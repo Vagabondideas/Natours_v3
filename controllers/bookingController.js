@@ -5,7 +5,7 @@ const User = require('../models/userModel'); //added for stripe hook lesson 227
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utilities/catchAsync');
 const factory = require('./factoryController');
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const endpointSecret = process.env.STRIPE_HOOK;
 
 exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   console.log('Checkout called');
