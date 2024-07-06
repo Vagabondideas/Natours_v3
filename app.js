@@ -11,8 +11,9 @@ const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const endpointSecret =
-  'whsec_54c16f242102acc035d98cb2cdf5b56263e81fd379fb66e683d9fd5fcedd96c3';
+// const endpointSecret =
+//   'whsec_54c16f242102acc035d98cb2cdf5b56263e81fd379fb66e683d9fd5fcedd96c3';
+const endpointSecret = 'we_1PZOpGIQVsIi8CVDPpSd96Z2';
 
 const AppError = require('./utilities/appError');
 const globalErrorHandler = require('./controllers/errorController');
