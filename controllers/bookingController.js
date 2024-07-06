@@ -64,6 +64,7 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
     res.status(500).json({ error: e.message });
     console.log('could not run stripe checkout');
   }
+  next();
 });
 
 /*
@@ -90,6 +91,8 @@ const createBookingCheckout = async (session) => {
   await Booking.create({ tour, user, price });
 };
 
+const webhookSecret = 'we_1PV4HSIQVsIi8CVDMd5xDJjf';
+
 exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
   const signature = req.headers['stripe-signature'];
@@ -101,7 +104,7 @@ exports.webhookCheckout = (req, res, next) => {
       req.body,
       // console.log('req body = ' + req.body),
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET,
+      webhookSecret,
     );
     console.log('event constructed = ' + event);
   } catch (err) {
@@ -112,6 +115,7 @@ exports.webhookCheckout = (req, res, next) => {
     createBookingCheckout(event.data.object);
 
   res.status(200).json({ received: true });
+  next();
 };
 
 // *************************************************************************

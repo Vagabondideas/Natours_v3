@@ -28,6 +28,12 @@ app.set('trust proxy', true);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
+
 // GLOBAL MIDDLEWARE
 // ********************************************************
 // CORS - Lesson 222
@@ -71,12 +77,6 @@ app.use('/api', limiter);
 //   express.raw({ type: 'application/json' }),
 //   bookingController.webhookCheckout,
 // );
-
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout,
-);
 
 // *****************************************************************************************************
 
