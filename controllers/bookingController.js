@@ -52,14 +52,14 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
     });
 
     // 3) Create session as response
-    // res.json({ url: session.url });
-    // console.log('Session url from booking controller ' + session.url);
+    res.json({ url: session.url });
+    console.log('Session url from booking controller ' + session.url);
 
-    res.status(200).json({
-      status: 'success',
-      session,
-    });
-    console.log('Full session from booking controller ' + session);
+    // res.status(200).json({
+    //   status: 'success',
+    //   session,
+    // });
+    // console.log('Full session from booking controller ' + session);
   } catch (e) {
     res.status(500).json({ error: e.message });
     console.log('could not run stripe checkout');
