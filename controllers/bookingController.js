@@ -84,7 +84,7 @@ exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
   const signature = req.headers['stripe-signature'];
   console.log('signature = ' + signature);
-  const endpointSecret = we_1PZOpGIQVsIi8CVDPpSd96Z2;
+  const endpointSecret = 'we_1PZOpGIQVsIi8CVDPpSd96Z2';
 
   let event;
 
