@@ -87,7 +87,6 @@ exports.webhookCheckout = (req, res, next) => {
   console.log('signature = ' + signature);
 
   let event;
-  console.log('body', JSON.stringify(req.body));
 
   try {
     const rawBody = getRawBody(req);
