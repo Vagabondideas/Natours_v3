@@ -28,10 +28,8 @@ app.set('trust proxy', false);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
 app.post(
-  '/webhook-checkout',
+  '/stripeHook',
   express.raw({ type: 'application/json' }),
   bookingController.webhookCheckout,
 );
