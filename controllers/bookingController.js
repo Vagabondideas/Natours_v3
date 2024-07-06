@@ -1,11 +1,11 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel'); //added for stripe hook lesson 227
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utilities/catchAsync');
 const factory = require('./factoryController');
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   console.log('Checkout called');
@@ -88,13 +88,8 @@ exports.webhookCheckout = (req, res, next) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      console.log('req body = ' + req.body),
-      signature,
-      endpointSecret,
-    );
-    console.log('event constructed = ' + event);
+    console.log('req body = ', req.body);
+    event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
   } catch (err) {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
