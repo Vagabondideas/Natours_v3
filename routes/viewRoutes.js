@@ -14,7 +14,12 @@ router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
 // GET MY TOUR WITHOUT CREATE BOOKING - AFTER HOOK
-router.get('/my-tours', authController.protect, viewsController.getMyTours);
+router.get(
+  '/my-tours',
+  authController.protect,
+  bookingController.createBookingCheckout,
+  viewsController.getMyTours,
+);
 
 /*
 GET MY TOUR n CREATE BOOKING - BEFORE HOOK

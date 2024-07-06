@@ -39,12 +39,12 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
         },
       ],
       // SUCCESS URL TO CREATE BOOKING - BEFORE HOOK
-      // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
-      //   req.params.tourId
-      // }&user=${req.user.id}&price=${tour.price}`,
+      success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+        req.params.tourId
+      }&user=${req.user.id}&price=${tour.price}`,
 
       // SUCCESS URL - AFTER HOOK
-      success_url: `${req.protocol}://${req.get('host')}/my-tours`, //alert in viewsController!!
+      // success_url: `${req.protocol}://${req.get('host')}/my-tours`, //alert in viewsController!!
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
@@ -65,9 +65,8 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   }
 });
 
-/*
-CREATE BOOKING WORKING - BEFORE HOOK
-***********************************************************************************
+// CREATE BOOKING WORKING - BEFORE HOOK
+// ***********************************************************************************
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   // This is only TEMPORARY, because it's UNSECURE: everyone can make bookings without paying
   const { tour, user, price } = req.query;
@@ -77,9 +76,10 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 
   res.redirect(req.originalUrl.split('?')[0]);
 });
-**************************************************************************************
-*/
+// **************************************************************************************
+
 // CREATE BOOKING - AFTER HOOK
+/*
 
 exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
@@ -112,6 +112,8 @@ const createBookingCheckout = async (session) => {
 };
 
 // *************************************************************************
+*/
+
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
