@@ -28,6 +28,8 @@ app.set('trust proxy', false);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+const endpointSecret = 'we_1PZOpGIQVsIi8CVDPpSd96Z2';
+
 app.post(
   '/stripeHook',
   express.raw({ type: 'application/json' }),

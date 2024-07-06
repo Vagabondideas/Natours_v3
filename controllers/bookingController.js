@@ -1,11 +1,12 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const endpointSecret = 'we_1PZOpGIQVsIi8CVDPpSd96Z2';
 
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel'); //added for stripe hook lesson 227
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utilities/catchAsync');
 const factory = require('./factoryController');
-const endpointSecret = process.env.STRIPE_HOOK;
+// const endpointSecret = process.env.STRIPE_HOOK;
 
 exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   console.log('Checkout called');
@@ -84,7 +85,6 @@ exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
   const signature = req.headers['stripe-signature'];
   console.log('signature = ' + signature);
-  const endpointSecret = 'we_1PZOpGIQVsIi8CVDPpSd96Z2';
 
   let event;
 
