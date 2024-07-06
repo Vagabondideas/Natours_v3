@@ -1,6 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const getRawBody = require('raw-body');
 
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel'); //added for stripe hook lesson 227
@@ -89,11 +88,9 @@ exports.webhookCheckout = (req, res, next) => {
   let event;
 
   try {
-    const rawBody = getRawBody(req);
     event = stripe.webhooks.constructEvent(
-      rawBody,
-      // req.body,
-      // console.log('req body = ' + req.body),
+      req.body,
+      console.log('req body = ' + req.body),
       signature,
       endpointSecret,
     );

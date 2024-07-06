@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.post(
   '/webhook-checkout',
-  // express.raw({ type: 'application/json' }),
+  express.raw({ type: 'application/json' }),
   bookingController.webhookCheckout,
 );
 
