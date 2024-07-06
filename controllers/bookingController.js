@@ -39,12 +39,12 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
         },
       ],
       // SUCCESS URL TO CREATE BOOKING - BEFORE HOOK
-      success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
-        req.params.tourId
-      }&user=${req.user.id}&price=${tour.price}`,
+      // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+      //   req.params.tourId
+      // }&user=${req.user.id}&price=${tour.price}`,
 
       // SUCCESS URL - AFTER HOOK
-      // success_url: `${req.protocol}://${req.get('host')}/my-tours`, //alert in viewsController!!
+      success_url: `${req.protocol}://${req.get('host')}/my-tours`, //alert in viewsController!!
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       // success_url: `${process.env.SERVER_URL}/success.html`,
       // cancel_url: `${process.env.SERVER_URL}/cancel.html`,
@@ -113,11 +113,11 @@ const createBookingCheckout = async (session) => {
 // *************************************************************************
 */
 
-exports.createBookingCheckout = async (session) => {
+exports.createBookingCheckout = async (eventData) => {
   console.log('createBookingCheckout reached');
-  const tour = session.client_reference_id;
-  const user = (await User.findOne({ email: session.customer_email })).id;
-  const price = session.amount_total / 100;
+  const tour = eventData.client_reference_id;
+  const user = (await User.findOne({ email: eventData.customer_email })).id;
+  const price = eventData.amount_total / 100;
   await Booking.create({ tour, user, price });
 };
 

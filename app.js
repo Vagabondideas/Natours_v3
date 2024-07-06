@@ -92,9 +92,9 @@ app.post(
     // Handle the event
     switch (event.type) {
       case 'checkout.session.completed':
-        const checkoutSessionCompleted = event.data.object;
+        const eventData = event.data.object;
         // Then define and call a function to handle the event payment_intent.succeeded
-        bookingController.createBookingCheckout(checkoutSessionCompleted);
+        bookingController.createBookingCheckout(eventData);
         break;
       // ... handle other event types
       default:
