@@ -1,7 +1,6 @@
-// const stripe = require('stripe')(
-//   'sk_test_51PROQXIQVsIi8CVDCWrFdfG9faNJj4fC7Nipu9dM3bz7b4i8PxBY0kRmz8NQ5bbvmHWAYCMm84zuPH4rIGiMTnd5006tIyIJ38',
-// );
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const getRawBody = require('raw-body');
 
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel'); //added for stripe hook lesson 227
@@ -81,16 +80,6 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 **************************************************************************************
 */
 // CREATE BOOKING - AFTER HOOK
-const createBookingCheckout = async (session) => {
-  console.log('createBookingCheckout reached');
-  const tour = session.client_reference_id;
-  const user = (await User.findOne({ email: session.customer_email })).id;
-  // const price = session.display_items[0].amount / 100;
-  const price = session.amount_total / 100;
-  await Booking.create({ tour, user, price });
-};
-
-const webhookSecret = 'we_1PV4HSIQVsIi8CVDMd5xDJjf';
 
 exports.webhookCheckout = (req, res, next) => {
   console.log('webhookCheckout reached');
@@ -98,12 +87,16 @@ exports.webhookCheckout = (req, res, next) => {
   console.log('signature = ' + signature);
 
   let event;
+  console.log('body', JSON.stringify(req.body));
+
   try {
+    const rawBody = getRawBody(req);
     event = stripe.webhooks.constructEvent(
-      req.body,
+      rawBody,
+      // req.body,
       // console.log('req body = ' + req.body),
       signature,
-      webhookSecret,
+      endpointSecret,
     );
     console.log('event constructed = ' + event);
   } catch (err) {
@@ -115,6 +108,15 @@ exports.webhookCheckout = (req, res, next) => {
 
   res.status(200).json({ received: true });
   next();
+};
+
+const createBookingCheckout = async (session) => {
+  console.log('createBookingCheckout reached');
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  // const price = session.display_items[0].amount / 100;
+  const price = session.amount_total / 100;
+  await Booking.create({ tour, user, price });
 };
 
 // *************************************************************************
