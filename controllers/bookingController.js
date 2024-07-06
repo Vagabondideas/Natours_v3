@@ -64,7 +64,6 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
     res.status(500).json({ error: e.message });
     console.log('could not run stripe checkout');
   }
-  next();
 });
 
 /*
