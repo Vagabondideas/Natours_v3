@@ -108,6 +108,13 @@ app.post(
 // *****************************************************************************************************
 
 //BODY PARSER middleware - Reading data from body into req.body
+app.use((req, res, next) => {
+  if (req.originalUrl === '/stripeHook') {
+    next(); // Do nothing with the body because I need it in a raw state.
+  } else {
+    express.json()(req, res, next); // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
 app.use(express.json({ limit: '10kb' })); //Limit body size file to 10Kb - Lesson 144
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
